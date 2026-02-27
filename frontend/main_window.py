@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QTabWidget
 from tab_noise_filters import NoiseTab
 from tab_edge_freq import EdgeTab
 from tab_hist_contrast import HistogramContrastTab
-from tab_color_hybrid import FrequencyFilterTab, ColorHybridTab
+from tab_color_hybrid import ColorHybridTab
 from Helpers.styles import load_app_font
 
 

@@ -37,7 +37,8 @@ class ImageDisplayWidget(QWidget):
 
         self.image_label = QLabel("No Image")
         self.image_label.setAlignment(Qt.AlignCenter)
-        self.image_label.setMinimumSize(300, 300)
+        self.image_label.setFixedSize(300, 280)
+        self.image_label.setScaledContents(False)
         self.image_label.setStyleSheet("""
             border: 2px solid #87ceeb; border-radius: 8px;
             background-color: #f5f5f5; color: #aaaaaa; font-size: 14px;
@@ -323,7 +324,7 @@ class HybridImageTab(QWidget):
 
     # Slots
     def _load_image(self, image_type: str):
-        mat, fname = open_image_file(self)
+        mat, fname = open_image_file(self, flags=cv2.IMREAD_GRAYSCALE)
         if mat is None:
             if fname != "":
                 set_status(self._status, "❌  Failed to load image.", error=True)

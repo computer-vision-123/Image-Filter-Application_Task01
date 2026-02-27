@@ -185,4 +185,4 @@ class EdgeTab(BaseImageTab):
             self._set_status(f"❌  Error: {e}", error=True)
             return
 
-        set_label_image(self._proc_label, bytes_to_mat(result))
+        set_label_image(self._proc_label, bytes_to_mat(result), max_w=380, max_h=280)

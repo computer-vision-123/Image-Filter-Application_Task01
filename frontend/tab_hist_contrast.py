@@ -130,8 +130,9 @@ class HistogramContrastTab(QWidget):
         image_group = QGroupBox("Image Display")
         image_layout = QVBoxLayout()
         self.image_label = QLabel()
-        self.image_label.setMinimumSize(500, 350)
+        self.image_label.setFixedSize(480, 320)
         self.image_label.setAlignment(Qt.AlignCenter)
+        self.image_label.setScaledContents(False)
         self.image_label.setStyleSheet(
             "border: 2px solid #87ceeb; border-radius: 8px; background-color: white;"
         )
@@ -205,7 +206,7 @@ class HistogramContrastTab(QWidget):
     # -----------------------------------------------------------------------
 
     def load_image(self):
-        mat, fname = open_image_file(self, flags=cv2.IMREAD_GRAYSCALE)
+        mat, fname = open_image_file(self)
         if mat is None:
             if fname != "":
                 QMessageBox.critical(self, "Error", "Failed to load image.")
@@ -219,7 +220,7 @@ class HistogramContrastTab(QWidget):
             self.image_path_label.setText(f"📁 {fname}")
             self.image_mode_label.setText("🎨 Color (RGB)" if self.is_color else "⚫ Grayscale")
 
-            set_label_image(self.image_label, mat)
+            set_label_image(self.image_label, mat, max_w=480, max_h=320)
 
             self.gray_btn.setEnabled(self.is_color)
             self.equalize_gray_btn.setEnabled(True)
@@ -247,7 +248,7 @@ class HistogramContrastTab(QWidget):
             self.equalize_rgb_btn.setEnabled(False)
             self.normalize_rgb_btn.setEnabled(False)
             self._update_histogram_selector()
-            set_label_image(self.image_label, bytes_to_mat(self.current_bytes))
+            set_label_image(self.image_label, bytes_to_mat(self.current_bytes), max_w=480, max_h=320)
             self.update_histogram()
         except Exception as e:
             traceback.print_exc()
@@ -261,7 +262,7 @@ class HistogramContrastTab(QWidget):
                 self.current_bytes = cv_backend.equalize_bgr(self.current_bytes)
             else:
                 self.current_bytes = cv_backend.equalize_image(self.current_bytes)
-            set_label_image(self.image_label, bytes_to_mat(self.current_bytes))
+            set_label_image(self.image_label, bytes_to_mat(self.current_bytes), max_w=480, max_h=320)
             self.update_histogram()
         except Exception as e:
             traceback.print_exc()
@@ -275,7 +276,7 @@ class HistogramContrastTab(QWidget):
                 self.current_bytes = cv_backend.normalize_bgr(self.current_bytes)
             else:
                 self.current_bytes = cv_backend.normalize_image(self.current_bytes)
-            set_label_image(self.image_label, bytes_to_mat(self.current_bytes))
+            set_label_image(self.image_label, bytes_to_mat(self.current_bytes), max_w=480, max_h=320)
             self.update_histogram()
         except Exception as e:
             traceback.print_exc()
@@ -292,7 +293,7 @@ class HistogramContrastTab(QWidget):
         self.normalize_rgb_btn.setEnabled(self.is_color)
         self.image_mode_label.setText("🎨 Color (RGB)" if self.is_color else "⚫ Grayscale")
         self._update_histogram_selector()
-        set_label_image(self.image_label, mat)
+        set_label_image(self.image_label, mat, max_w=480, max_h=320)
         self.update_histogram()
 
     def update_histogram(self):
