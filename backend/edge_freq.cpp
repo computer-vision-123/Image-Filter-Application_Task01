@@ -27,24 +27,27 @@ static cv::Mat apply_gradient_kernels(const cv::Mat &gray,
                                       const cv::Mat &Ky,
                                       int direction)
 {
-
     cv::Mat gray_f;
     gray.convertTo(gray_f, CV_32F);
-    cv::Mat Gx, Gy;
-    cv::filter2D(gray_f, Gx, CV_32F, Kx);
-    cv::filter2D(gray_f, Gy, CV_32F, Ky);
+    
+    cv::Mat Gx, Gy, result_f;
 
-    cv::Mat result_f;
     if (direction == 0) {
-        result_f = cv::abs(Gx);           // vertical edges only
-    } else if (direction == 1) {
-        result_f = cv::abs(Gy);           // horizontal edges only
-    } else {
-        cv::magnitude(Gx, Gy, result_f);  // full magnitude sqrt(Gx²+Gy²)
+        // ONLY calculate vertical edges
+        cv::filter2D(gray_f, Gx, CV_32F, Kx);
+        result_f = cv::abs(Gx);           
+    } 
+    else if (direction == 1) {
+        // ONLY calculate horizontal edges
+        cv::filter2D(gray_f, Gy, CV_32F, Ky);
+        result_f = cv::abs(Gy);           
+    } 
+    else {
+        // Calculate both ONLY when magnitude is requested
+        cv::filter2D(gray_f, Gx, CV_32F, Kx);
+        cv::filter2D(gray_f, Gy, CV_32F, Ky);
+        cv::magnitude(Gx, Gy, result_f);  
     }
-
-    //cv::Mat result_8u;
-    //v::normalize(result_f, result_8u, 0, 255, cv::NORM_MINMAX, CV_8U);
 
     cv::Mat result_8u;
     result_f.convertTo(result_8u, CV_8U);
