@@ -25,7 +25,8 @@ py::bytes apply_canny(const py::bytes &data,
 static cv::Mat apply_gradient_kernels(const cv::Mat &gray,
                                       const cv::Mat &Kx,
                                       const cv::Mat &Ky,
-                                      int direction)
+                                      int direction,
+                                      cv::Point anchor = cv::Point(-1, -1))
 {
     cv::Mat gray_f;
     gray.convertTo(gray_f, CV_32F);
@@ -34,18 +35,18 @@ static cv::Mat apply_gradient_kernels(const cv::Mat &gray,
 
     if (direction == 0) {
         // ONLY calculate vertical edges
-        cv::filter2D(gray_f, Gx, CV_32F, Kx);
+        cv::filter2D(gray_f, Gx, CV_32F, Kx, anchor);
         result_f = cv::abs(Gx);           
     } 
     else if (direction == 1) {
         // ONLY calculate horizontal edges
-        cv::filter2D(gray_f, Gy, CV_32F, Ky);
+        cv::filter2D(gray_f, Gy, CV_32F, Ky, anchor);
         result_f = cv::abs(Gy);           
     } 
     else {
         // Calculate both ONLY when magnitude is requested
-        cv::filter2D(gray_f, Gx, CV_32F, Kx);
-        cv::filter2D(gray_f, Gy, CV_32F, Ky);
+        cv::filter2D(gray_f, Gx, CV_32F, Kx, anchor);
+        cv::filter2D(gray_f, Gy, CV_32F, Ky, anchor);
         cv::magnitude(Gx, Gy, result_f);  
     }
 
@@ -117,7 +118,7 @@ py::bytes apply_roberts(const py::bytes &data, int direction)
          0,  1,
         -1,  0);
 
-    cv::Mat result_8u = apply_gradient_kernels(gray, Kx, Ky, direction);
+    cv::Mat result_8u = apply_gradient_kernels(gray, Kx, Ky, direction, cv::Point(0, 0));
     cv::Mat result_bgr;
     cv::cvtColor(result_8u, result_bgr, cv::COLOR_GRAY2BGR);
 

@@ -139,18 +139,29 @@ class EdgeTab(BaseImageTab):
     def _on_method_changed(self, method: str):
         self._canny_params.setVisible(method == "Canny")
         self._sobel_params.setVisible(method in ("Sobel", "Prewitt", "Roberts"))
-        if self._original_bytes:
+        
+        # --- UI FIX: Dynamically change radio button labels for Roberts ---
+        if method == "Roberts":
+            self._sobel_x.setText("Diag +45°")
+            self._sobel_y.setText("Diag -45°")
+            self._sobel_both.setText("Magnitude") # Optional: clarifies it combines both
+        else:
+            self._sobel_x.setText("X")
+            self._sobel_y.setText("Y")
+            self._sobel_both.setText("Both")
+        # ------------------------------------------------------------------
+
+        if getattr(self, '_original_bytes', None): # Safely check if image is loaded
             self._set_status(f"Method changed to {method}. Click Apply.")
         else:
             self._set_status("Open an image to get started.")
-
 
     def _enforce_odd_kernel(self, val: int):
         if val % 2 == 0:
             self._kernel_spin.setValue(val + 1)
 
     def _apply_edge_detection(self):
-        if not self._original_bytes:
+        if not getattr(self, '_original_bytes', None):
             self._set_status("⚠️  Please open an image first.", error=True)
             return
 
@@ -171,13 +182,19 @@ class EdgeTab(BaseImageTab):
 
             elif method in ("Sobel", "Prewitt", "Roberts"):
                 direction = self._sobel_btn_group.checkedId()
+                    
+                
                 if method == "Sobel":
                     result = cv_backend.apply_sobel(self._original_bytes, direction)
+                    dir_label = {0: "X direction", 1: "Y direction", 2: "Both"}[direction]
                 elif method == "Prewitt":
                     result = cv_backend.apply_prewitt(self._original_bytes, direction)
-                else:
+                    dir_label = {0: "X direction", 1: "Y direction", 2: "Both"}[direction]
+                else: # Roberts
                     result = cv_backend.apply_roberts(self._original_bytes, direction)
-                dir_label = {0: "X direction", 1: "Y direction", 2: "Both"}[direction]
+                    dir_label = {0: "Diag +45°", 1: "Diag -45°", 2: "Magnitude"}[direction]
+                
+                    
                 self._set_status(f"✅  {method} applied — {dir_label}.")
 
         except Exception as e:
