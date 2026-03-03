@@ -23,8 +23,7 @@ struct ImageStats {
 std::vector<float> compute_histogram(const py::bytes &data)
 {
     Mat img  = decode_image(data);
-    Mat gray;
-    cvtColor(img, gray, COLOR_BGR2GRAY);
+    Mat gray = to_grayscale(img);
 
     std::vector<float> hist(256, 0.0f);
     for (int y = 0; y < gray.rows; ++y) {
@@ -117,8 +116,7 @@ std::vector<std::vector<std::vector<float>>> get_bgr_histograms_and_cdfs(const p
 py::bytes equalize_image(const py::bytes &data)
 {
     Mat img  = decode_image(data);
-    Mat gray;
-    cvtColor(img, gray, COLOR_BGR2GRAY);
+    Mat gray = to_grayscale(img);
 
     Mat equalized;
     equalizeHist(gray, equalized);
@@ -149,8 +147,7 @@ py::bytes equalize_bgr(const py::bytes &data)
 py::bytes normalize_image(const py::bytes &data)
 {
     Mat img  = decode_image(data);
-    Mat gray;
-    cvtColor(img, gray, COLOR_BGR2GRAY);
+    Mat gray = to_grayscale(img);
 
     Mat normalized;
     normalize(gray, normalized, 0, 255, NORM_MINMAX);
@@ -181,8 +178,7 @@ py::bytes normalize_bgr(const py::bytes &data)
 py::bytes color_to_gray(const py::bytes &data)
 {
     Mat img  = decode_image(data);
-    Mat gray;
-    cvtColor(img, gray, COLOR_BGR2GRAY);
+    Mat gray = to_grayscale(img);
 
     Mat result;
     cvtColor(gray, result, COLOR_GRAY2BGR);
@@ -196,8 +192,7 @@ py::bytes color_to_gray(const py::bytes &data)
 ImageStats compute_stats(const py::bytes &data)
 {
     Mat img  = decode_image(data);
-    Mat gray;
-    cvtColor(img, gray, COLOR_BGR2GRAY);
+    Mat gray = to_grayscale(img);
 
     Scalar mean, stddev;
     meanStdDev(gray, mean, stddev);
@@ -223,8 +218,7 @@ py::bytes apply_mapping_curve(const py::bytes &data, const std::vector<float> &m
         throw std::runtime_error("mapping must have exactly 256 entries");
 
     Mat img  = decode_image(data);
-    Mat gray;
-    cvtColor(img, gray, COLOR_BGR2GRAY);
+    Mat gray = to_grayscale(img);
 
     Mat mapped(gray.size(), CV_8UC1);
     for (int y = 0; y < gray.rows; ++y) {

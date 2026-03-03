@@ -7,9 +7,8 @@ py::bytes apply_canny(const py::bytes &data,
                       double t_high,
                       int    kernel_size)
 {
-    cv::Mat img = decode_image(data);
-    cv::Mat gray;
-    cv::cvtColor(img, gray, cv::COLOR_BGR2GRAY);
+    cv::Mat img  = decode_image(data);
+    cv::Mat gray = to_grayscale(img);
     cv::Mat blurred;
     cv::GaussianBlur(gray, blurred, cv::Size(kernel_size, kernel_size), 0);
     cv::Mat edges;
@@ -58,9 +57,8 @@ static cv::Mat apply_gradient_kernels(const cv::Mat &gray,
 
 py::bytes apply_sobel(const py::bytes &data, int direction)
 {
-    cv::Mat img = decode_image(data);
-    cv::Mat gray;
-    cv::cvtColor(img, gray, cv::COLOR_BGR2GRAY);
+    cv::Mat img  = decode_image(data);
+    cv::Mat gray = to_grayscale(img);
 
     cv::Mat Kx = (cv::Mat_<float>(3, 3) <<
         -1,  0,  1,
@@ -82,9 +80,8 @@ py::bytes apply_sobel(const py::bytes &data, int direction)
 
 py::bytes apply_prewitt(const py::bytes &data, int direction)
 {
-    cv::Mat img = decode_image(data);
-    cv::Mat gray;
-    cv::cvtColor(img, gray, cv::COLOR_BGR2GRAY);
+    cv::Mat img  = decode_image(data);
+    cv::Mat gray = to_grayscale(img);
 
     cv::Mat Kx = (cv::Mat_<float>(3, 3) <<
         -1,  0,  1,
@@ -105,9 +102,8 @@ py::bytes apply_prewitt(const py::bytes &data, int direction)
 
 py::bytes apply_roberts(const py::bytes &data, int direction)
 {
-    cv::Mat img = decode_image(data);
-    cv::Mat gray;
-    cv::cvtColor(img, gray, cv::COLOR_BGR2GRAY);
+    cv::Mat img  = decode_image(data);
+    cv::Mat gray = to_grayscale(img);
 
     // 2x2 kernels — diagonal gradient operators
     cv::Mat Kx = (cv::Mat_<float>(2, 2) <<
