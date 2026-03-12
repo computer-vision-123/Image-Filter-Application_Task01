@@ -203,6 +203,8 @@ This project demonstrates core concepts in **Digital Image Processing and Comput
 - **Mostafa Khaled Elsayed**
 - **Sarah Sameh Mohamed**
 
+--- 
+
 <div align="center">
 
 ### Computer Vision Laboratory Project
