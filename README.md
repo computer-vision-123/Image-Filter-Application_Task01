@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🖼️ Smart Image Processing Studio
+#  Smart Image Processing Studio
 
 ### Computer Vision Toolkit for Image Enhancement and Analysis
 
@@ -195,13 +195,6 @@ This project demonstrates core concepts in **Digital Image Processing and Comput
 
 ---
 
-<div align="center">
-
-### Computer Vision Laboratory Project
-
-Image Processing • Algorithm Design • Visual Computing
-
----
 
 ## 👨‍💻 Contributors
 
@@ -209,5 +202,12 @@ Image Processing • Algorithm Design • Visual Computing
 - **Mariam Sherif Mohamed**
 - **Mostafa Khaled Elsayed**
 - **Sarah Sameh Mohamed**
+
+<div align="center">
+
+### Computer Vision Laboratory Project
+
+Image Processing • Algorithm Design • Visual Computing
+
 
 </div>
